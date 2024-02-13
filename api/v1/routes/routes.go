@@ -1,17 +1,15 @@
 package routes
 
 import (
-	"fmt"
-	"net/http"
+	"shopping-chart/api/v1/controller"
 
 	"github.com/julienschmidt/httprouter"
 )
 
-func NewRoutes() *httprouter.Router {
+func NewRoutes(customerController controller.CustomerController) *httprouter.Router {
 	router := httprouter.New()
-	router.GET("/hello", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-		fmt.Fprintf(w, "Hello")
-	})
+
+	router.POST("/api/v1/register", customerController.RegisterHandler)
 
 	return router
 }

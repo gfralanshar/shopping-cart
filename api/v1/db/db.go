@@ -11,9 +11,9 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-var db *gorm.DB
 
-func ConnectDB() {
+func ConnectDB() *gorm.DB {
+	var db *gorm.DB
 	var err error
 
 	username := os.Getenv("DB_USER")
@@ -30,4 +30,5 @@ func ConnectDB() {
 	db.AutoMigrate(&model.Customer{})
 
 	helper.PanicIfError(err)
+	return db
 }
