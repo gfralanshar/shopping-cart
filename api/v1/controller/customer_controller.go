@@ -8,4 +8,5 @@ import (
 
 type CustomerController interface {
 	RegisterHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params)
+	LoginHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params)
 }

@@ -10,6 +10,7 @@ func NewRoutes(customerController controller.CustomerController) *httprouter.Rou
 	router := httprouter.New()
 
 	router.POST("/api/v1/register", customerController.RegisterHandler)
+	router.POST("/api/v1/login", customerController.LoginHandler)
 
 	return router
 }

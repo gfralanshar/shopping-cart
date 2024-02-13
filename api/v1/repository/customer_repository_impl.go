@@ -28,3 +28,11 @@ func (cr *CustomerRepositoryImpl) Create(c model.Customer) model.Customer {
 
 	return customer
 }
+
+func (cr *CustomerRepositoryImpl) FindUserByUsername(username string) (model.Customer, error) {
+	customer := model.Customer{}
+	err := cr.db.Take(&customer, "username = ?", username).Error
+	helper.PanicIfError(err)
+
+	return customer, nil
+}

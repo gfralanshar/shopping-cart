@@ -33,3 +33,19 @@ func (cc *CustomerControllerImpl) RegisterHandler(w http.ResponseWriter, r *http
 
 	helper.WriteToResponseBody(w, webResponse)
 }
+
+func (cr *CustomerControllerImpl) LoginHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	var loginRequest dto.LoginCustomerRequestDTO
+	helper.ReadFromRequestBody(r, &loginRequest)
+
+	userResponse, err := cr.customerService.SignIn(loginRequest)
+	helper.PanicIfError(err)
+
+	webResponse := web.WebResponse{
+		Status: "ok",
+		Code:   http.StatusOK,
+		Data:   userResponse,
+	}
+
+	helper.WriteToResponseBody(w, webResponse)
+}

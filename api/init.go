@@ -12,6 +12,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
+	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
 
@@ -24,6 +25,11 @@ func init() {
 
 	// connect to db
 	dbs = db.ConnectDB()
+
+	// set log
+	logrus.SetFormatter(&logrus.TextFormatter{
+		DisableColors: false,
+	})
 }
 
 func Run() {

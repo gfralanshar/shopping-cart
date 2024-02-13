@@ -1,7 +1,10 @@
 package helper
 
-func PanicIfError(err error)  {
+import "github.com/sirupsen/logrus"
+
+func PanicIfError(err error) {
 	if err != nil {
-		panic(err.Error())
+		logrus.Error(err.Error())
+		panic(err)
 	}
 }
