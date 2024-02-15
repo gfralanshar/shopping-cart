@@ -4,13 +4,11 @@ import (
 	"fmt"
 	"os"
 	"shopping-chart/api/v1/helper"
-	"shopping-chart/api/v1/model"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
-
 
 func ConnectDB() *gorm.DB {
 	var db *gorm.DB
@@ -27,7 +25,7 @@ func ConnectDB() *gorm.DB {
 		Logger: logger.Default.LogMode(logger.Info),
 	})
 
-	db.AutoMigrate(&model.Customer{})
+	// db.AutoMigrate(&model.Customer{}, &model.Product{})
 
 	helper.PanicIfError(err)
 	return db

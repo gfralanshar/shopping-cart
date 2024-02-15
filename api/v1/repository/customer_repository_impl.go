@@ -36,3 +36,11 @@ func (cr *CustomerRepositoryImpl) FindUserByUsername(username string) (model.Cus
 
 	return customer, nil
 }
+
+func (cr *CustomerRepositoryImpl) FindUserByCustomerId(id int) (model.Customer, error) {
+	customer := model.Customer{}
+	err := cr.db.Take(&customer, "id = ?", id).Error
+	helper.PanicIfError(err)
+
+	return customer, nil
+}

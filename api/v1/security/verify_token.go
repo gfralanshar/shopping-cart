@@ -3,6 +3,8 @@ package security
 import (
 	"fmt"
 	"net/http"
+	"shopping-chart/api/v1/helper"
+	"strconv"
 	"strings"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -44,7 +46,7 @@ func ExtractToken(r *http.Request) string {
 	return ""
 }
 
-func ExtractTokenUsername(r *http.Request) (string, error) {
+func ExtractTokenId(r *http.Request) (int, error) {
 	tokenString := ExtractToken(r)
 	token, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -55,14 +57,15 @@ func ExtractTokenUsername(r *http.Request) (string, error) {
 	})
 
 	if err != nil {
-		return "", err
+		return 0, err
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if ok && token.Valid {
-		username := claims["username"].(string)
-		return username, nil
+		id, err := strconv.ParseUint(fmt.Sprintf("%.0f", claims["id"]), 10, 32)
+		helper.PanicIfError(err)
+		return int(id), nil
 	}
 
-	return "", nil
+	return 0, nil
 }

@@ -38,10 +38,16 @@ func Run() {
 	address := host + ":" + port
 
 	validate := validator.New()
+
 	customerRepository := repository.NewCustomer(dbs)
 	customerService := service.NewCustomerService(customerRepository, validate)
 	customerController := controller.NewCustomerController(customerService)
-	router := routes.NewRoutes(customerController)
+
+	productRepository := repository.NewProductRepository(dbs)
+	productService := service.NewProductService(productRepository, validate)
+	productController := controller.NewProductController(productService, customerService)
+
+	router := routes.NewRoutes(customerController, productController)
 
 	server := http.Server{
 		Addr:    address,

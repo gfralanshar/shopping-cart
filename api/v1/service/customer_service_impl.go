@@ -47,11 +47,18 @@ func (cs *CustomerServiceImpl) SignIn(cl dto.LoginCustomerRequestDTO) (dto.Login
 		return dto.LoginCustomerResponseDTO{}, fmt.Errorf("Unprocessable entity")
 	}
 
-	token, err := security.CreateToken(customer.Username)
+	token, err := security.CreateToken(customer.Id)
 	helper.PanicIfError(err)
 
 	userData.Token = token
 	userData.Username = customer.Username
 
 	return userData, nil
+}
+
+func (cs *CustomerServiceImpl) FindById(id int) dto.CreateCustomerResponseDTO {
+	customer, err := cs.CustomerRepository.FindUserByCustomerId(id)
+	helper.PanicIfError(err)
+
+	return dto.ToCustomerResponse(customer)
 }

@@ -10,9 +10,9 @@ import (
 
 var secretKey = []byte(os.Getenv("API_KEY"))
 
-func CreateToken(username string) (string, error) {
+func CreateToken(customer_id int) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"username":   username,
+		"id":   customer_id,
 		"authorized": true,
 		"exp":        time.Now().Add(time.Hour * 24).Unix(),
 	})
