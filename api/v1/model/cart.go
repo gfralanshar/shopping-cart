@@ -13,6 +13,5 @@ type Cart struct {
 	CreatedAt  time.Time    `gorm:"column:created_at;autoCreateTime;<-create"`
 	UpdatedAt  time.Time    `gorm:"column:updated_at;autoCreateTime;autoUpdateTime"`
 	DeletedAt  sql.NullTime `gorm:"column:deleted_at"`
-	Product    Product      `gorm:"foreignKey:product_id;references:id"`
-	Customer   Customer     `gorm:"foreignKey:customer_id;references:id"`
+	Product    Product      `gorm:"column:product`
 }

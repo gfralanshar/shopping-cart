@@ -11,3 +11,18 @@ func ToCartResponse(c model.Cart) CreateCartResponseDTO {
 		Quantity:   c.Quantity,
 	}
 }
+
+func ToCartsResponses(carts []model.Cart) []ListCartProductsDTO {
+	listCartResponses := []ListCartProductsDTO{}
+
+	for _, cart := range carts {
+		listCartResponse := ListCartProductsDTO{
+			ProductName: cart.Product.Name,
+			Quantity:    cart.Quantity,
+		}
+
+		listCartResponses = append(listCartResponses, listCartResponse)
+	}
+
+	return listCartResponses
+}

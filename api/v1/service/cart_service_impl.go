@@ -44,3 +44,8 @@ func (cs *CartServiceImpl) AddToCart(req dto.CreateCartRequestDTO) dto.CreateCar
 
 	return dto.ToCartResponse(model.Cart{})
 }
+
+func (cs *CartServiceImpl) ShowCarts(customerId int) []dto.ListCartProductsDTO {
+	carts := cs.cartRepository.FindAllCarts(customerId)
+	return dto.ToCartsResponses(carts)
+}

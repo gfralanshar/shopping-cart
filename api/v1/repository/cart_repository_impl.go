@@ -27,3 +27,10 @@ func (cr *CartRepositoryImpl) AddProduct(c model.Cart) model.Cart {
 	helper.PanicIfError(err)
 	return cart
 }
+
+func (cr *CartRepositoryImpl) FindAllCarts(customerId int) []model.Cart {
+	carts := []model.Cart{}
+	err := cr.db.Model(&model.Cart{}).Preload("Product").Joins("join products on products.id = carts.product_id").Where("carts.customer_id = ?", customerId).Find(&carts).Error
+	helper.PanicIfError(err)
+	return carts
+}

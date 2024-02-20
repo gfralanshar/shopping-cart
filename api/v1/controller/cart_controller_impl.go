@@ -48,3 +48,18 @@ func (cc *CartControllerImpl) CreateCartHandler(w http.ResponseWriter, r *http.R
 
 	helper.WriteToResponseBody(w, cartResponse)
 }
+
+func (cc *CartControllerImpl) ShowCartsListHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	// take current user id
+	customerId, err := security.ExtractTokenId(r)
+	helper.PanicIfError(err)
+
+	carts := cc.CartService.ShowCarts(customerId)
+	cartResponse := web.WebResponse{
+		Status: "ok",
+		Code:   http.StatusOK,
+		Data:   carts,
+	}
+
+	helper.WriteToResponseBody(w, cartResponse)
+}
