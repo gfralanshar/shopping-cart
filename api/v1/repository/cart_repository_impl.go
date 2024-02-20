@@ -17,20 +17,43 @@ func NewCart(db *gorm.DB) CartRepository {
 	}
 }
 
-func (cr *CartRepositoryImpl) AddProduct(c model.Cart) model.Cart {
+func (cr *CartRepositoryImpl) Create(c model.Cart) model.Cart {
 	cart := model.Cart{
 		CustomerId: c.CustomerId,
-		ProductId:  c.ProductId,
-		Quantity:   c.Quantity,
 	}
+
 	err := cr.db.Create(&cart).Error
 	helper.PanicIfError(err)
+
 	return cart
 }
 
-func (cr *CartRepositoryImpl) FindAllCarts(customerId int) []model.Cart {
-	carts := []model.Cart{}
-	err := cr.db.Model(&model.Cart{}).Preload("Product").Joins("join products on products.id = carts.product_id").Where("carts.customer_id = ?", customerId).Find(&carts).Error
+func (cr *CartRepositoryImpl) AddProduct(c model.CartItems) model.CartItems {
+	cartItem := model.CartItems{
+		CartId:    c.CartId,
+		ProductId: c.ProductId,
+		Quantity:  c.Quantity,
+	}
+
+	err := cr.db.Preload("Product").Create(&cartItem).Error
 	helper.PanicIfError(err)
-	return carts
+
+	return cartItem
+}
+
+func (cr *CartRepositoryImpl) FindAllCarts(customerId int) []model.CartItems {
+	cartItems := []model.CartItems{}
+	err := cr.db.Model(&model.CartItems{}).Preload("Product").Joins("join products on products.id = cart_items.product_id").Where("customer_id= ?", customerId).Find(&cartItems).Error
+	helper.PanicIfError(err)
+	return cartItems
+}
+
+func (cr *CartRepositoryImpl) FindCartByCustomerId(customerId int) (model.Cart, error) {
+	var cart model.Cart
+	err := cr.db.Where("customer_id", customerId).First(&cart).Error
+	if err == gorm.ErrRecordNotFound {
+		return model.Cart{}, err
+	}
+
+	return cart, nil
 }

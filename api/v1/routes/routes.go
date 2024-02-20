@@ -25,8 +25,8 @@ func NewRoutes(customerController controller.CustomerController, productControll
 	router.GET("/api/v1/products", middleware.AuthMiddleware(productController.ProductListHandler))
 
 	// carts
-	router.POST("/api/v1/products/:product_id/carts", middleware.AuthMiddleware(cartsController.CreateCartHandler))
-	router.GET("/api/v1/my-carts", middleware.AuthMiddleware(cartsController.ShowCartsListHandler))
+	router.POST("/api/v1/carts/products/:product_id", middleware.AuthMiddleware(cartsController.CreateCartHandler))
+	router.GET("/api/v1/carts", middleware.AuthMiddleware(cartsController.ShowCartsListHandler))
 
 	return router
 }

@@ -4,25 +4,31 @@ import (
 	"shopping-chart/api/v1/model"
 )
 
-func ToCartResponse(c model.Cart) CreateCartResponseDTO {
-	return CreateCartResponseDTO{
-		CustomerId: c.CustomerId,
-		ProductId:  c.ProductId,
-		Quantity:   c.Quantity,
+func ToAddToCartResponse(c model.CartItems) AddCartResponseDTO {
+	return AddCartResponseDTO{
+		ProductName: c.Product.Name,
+		Quantity:    c.Quantity,
 	}
 }
 
-func ToCartsResponses(carts []model.Cart) []ListCartProductsDTO {
-	listCartResponses := []ListCartProductsDTO{}
+func ToCartsResponses(carts []model.CartItems) []ListCartProductDTO {
+	listCartResponses := []ListCartProductDTO{}
 
 	for _, cart := range carts {
-		listCartResponse := ListCartProductsDTO{
-			ProductName: cart.Product.Name,
+		listCartResponse := ListCartProductDTO{
 			Quantity:    cart.Quantity,
+			ProductName: cart.Product.Name,
 		}
 
 		listCartResponses = append(listCartResponses, listCartResponse)
 	}
 
 	return listCartResponses
+}
+
+func ToCreateCartResponse(cart model.Cart) CreateCartResponseDTO {
+	return CreateCartResponseDTO{
+		CustomerId: cart.CustomerId,
+		CartId: cart.Id,
+	}
 }

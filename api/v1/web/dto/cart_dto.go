@@ -1,21 +1,32 @@
 package dto
 
-import "shopping-chart/api/v1/model"
-
 type CreateCartRequestDTO struct {
 	CustomerId int `json:"customer_id"`
-	ProductId  int `json:"product_id"`
-	Quantity   int `json:"quantity"`
 }
 
 type CreateCartResponseDTO struct {
-	CustomerId int             `json:"customer_id"`
-	ProductId  int             `json:"product_id"`
-	Quantity   int             `json:"quantity"`
-	Products   []model.Product `json:"products`
+	CustomerId int
+	CartId   int
 }
 
-type ListCartProductsDTO struct {
+type AddCartRequestDTO struct {
+	CustomerId int
+	CartId     int
+	ProductId  int
+	Quantity   int `json:"quantity"`
+}
+
+type AddCartResponseDTO struct {
 	ProductName string `json:"product_name"`
-	Quantity    int `json:"quantity"`
+	Quantity    int    `json:"quantity"`
+}
+
+type FindCartByIdDTO struct {
+	CustomerId int `json:"customer_id"`
+	CartId     int `json:"cart_id"`
+}
+
+type ListCartProductDTO struct {
+	ProductName string `json:"product_name"`
+	Quantity    int    `json:"quantity"`
 }

@@ -23,7 +23,7 @@ func NewCart(cs service.CartService) CartController {
 }
 
 func (cc *CartControllerImpl) CreateCartHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-	var req dto.CreateCartRequestDTO
+	var req dto.AddCartRequestDTO
 
 	// take current user id
 	id, err := security.ExtractTokenId(r)
@@ -38,12 +38,15 @@ func (cc *CartControllerImpl) CreateCartHandler(w http.ResponseWriter, r *http.R
 
 	helper.ReadFromRequestBody(r, &req)
 
-	cart := cc.CartService.AddToCart(req)
+	// create a new cart
+	cart := cc.CartService.CreateCart(req.CustomerId)
+	req.CartId = cart.CartId
+	addProductToCart := cc.CartService.AddToCart(req)
 
 	cartResponse := web.WebResponse{
 		Status: "created",
 		Code:   http.StatusCreated,
-		Data:   cart,
+		Data:   addProductToCart,
 	}
 
 	helper.WriteToResponseBody(w, cartResponse)

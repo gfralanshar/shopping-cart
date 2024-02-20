@@ -3,6 +3,8 @@ package repository
 import "shopping-chart/api/v1/model"
 
 type CartRepository interface {
-	AddProduct(cart model.Cart) model.Cart
-	FindAllCarts(customerId int) []model.Cart
+	Create(cart model.Cart) model.Cart
+	AddProduct(cart model.CartItems) model.CartItems
+	FindAllCarts(customerId int) []model.CartItems
+	FindCartByCustomerId(customerId int) (model.Cart, error)
 }
