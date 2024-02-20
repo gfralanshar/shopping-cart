@@ -35,7 +35,7 @@ func (ps *ProductServiceImpl) CreateProduct(p dto.CreateProductRequestDTO) dto.C
 	return dto.ToProductResponse(p2)
 }
 
-func (ps *ProductServiceImpl) ProductListByCategory(category string) []dto.ProductListResponseDTO  {
+func (ps *ProductServiceImpl) ProductListByCategory(category string) []dto.ProductListResponseDTO {
 	products := ps.ProductRepository.FindProductByCategory(category)
 	return dto.ToProductList(products)
 }

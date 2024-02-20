@@ -41,3 +41,20 @@ func (pr *ProductRepositoryImpl) FindProductByCategory(category string) []model.
 	helper.PanicIfError(err)
 	return products
 }
+
+func (pr *ProductRepositoryImpl) FindProductById(id int) model.Product {
+	var product model.Product
+	err := pr.db.Where("id = ?", id).First(&product).Error
+	helper.PanicIfError(err)
+	return product
+}
+
+func (pr *ProductRepositoryImpl) UpdateProduct(p model.Product) {
+	updatedProduct := model.Product{
+		Id:       p.Id,
+		Quantity: p.Quantity,
+	}
+
+	err := pr.db.Model(&model.Product{}).Where("id = ?", p.Id).Update("quantity", updatedProduct.Quantity).Error
+	helper.PanicIfError(err)
+}

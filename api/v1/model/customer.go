@@ -13,4 +13,5 @@ type Customer struct {
 	UpdatedAt time.Time    `gorm:"column:updated_at;autoCreateTime;autoUpdateTime"`
 	DeletedAt sql.NullTime `gorm:"column:deleted_at"`
 	Products  []Product    `gorm:"foreignKey:customer_id;references:id"`
+	Carts     []Cart       `gorm:"many2many:carts;foreignKey:id;joinForeignKey:customer_id;references:id;joinReferences:product_id"`
 }

@@ -39,15 +39,22 @@ func Run() {
 
 	validate := validator.New()
 
+	// customer
 	customerRepository := repository.NewCustomer(dbs)
 	customerService := service.NewCustomerService(customerRepository, validate)
 	customerController := controller.NewCustomerController(customerService)
 
+	// product
 	productRepository := repository.NewProductRepository(dbs)
 	productService := service.NewProductService(productRepository, validate)
 	productController := controller.NewProductController(productService, customerService)
 
-	router := routes.NewRoutes(customerController, productController)
+	// cart
+	cartRepository := repository.NewCart(dbs)
+	cartService := service.NewCart(productRepository, cartRepository, validate)
+	cartController := controller.NewCart(cartService)
+
+	router := routes.NewRoutes(customerController, productController, cartController)
 
 	server := http.Server{
 		Addr:    address,

@@ -13,7 +13,7 @@ func TestMiddleWare(w http.ResponseWriter, r *http.Request, p httprouter.Params)
 	fmt.Fprintf(w, "Hello World")
 }
 
-func NewRoutes(customerController controller.CustomerController, productController controller.ProductController) *httprouter.Router {
+func NewRoutes(customerController controller.CustomerController, productController controller.ProductController, cartsController controller.CartController) *httprouter.Router {
 	router := httprouter.New()
 
 	router.POST("/api/v1/register", customerController.RegisterHandler)
@@ -23,6 +23,9 @@ func NewRoutes(customerController controller.CustomerController, productControll
 	// products
 	router.POST("/api/v1/products", middleware.AuthMiddleware(productController.CreateProductHandler))
 	router.GET("/api/v1/products", middleware.AuthMiddleware(productController.ProductListHandler))
+
+	// carts
+	router.POST("/api/v1/products/:product_id/carts", middleware.AuthMiddleware(cartsController.CreateCartHandler))
 
 	return router
 }
