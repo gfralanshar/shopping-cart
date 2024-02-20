@@ -19,8 +19,8 @@ func NewProductRepository(db *gorm.DB) ProductRepository {
 
 func (pr *ProductRepositoryImpl) Create(p model.Product) model.Product {
 	product := model.Product{
-		Name:     p.Name,
-		Price:    p.Price,
+		Name:       p.Name,
+		Price:      p.Price,
 		CustomerId: p.CustomerId,
 	}
 
@@ -28,4 +28,16 @@ func (pr *ProductRepositoryImpl) Create(p model.Product) model.Product {
 	helper.PanicIfError(err)
 
 	return product
+}
+
+func (pr *ProductRepositoryImpl) FindProductByCategory(category string) []model.Product {
+	var products []model.Product
+	var err error
+	if category != "" {
+		err = pr.db.Model(&model.Product{}).Preload("Category").Joins("join categories on categories.id = products.category_id").Where("categories.category_name = ?", category).Find(&products).Error
+	} else {
+		err = pr.db.Model(&model.Product{}).Preload("Category").Joins("join categories on categories.id = products.category_id").Find(&products).Error
+	}
+	helper.PanicIfError(err)
+	return products
 }

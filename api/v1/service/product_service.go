@@ -4,4 +4,5 @@ import "shopping-chart/api/v1/web/dto"
 
 type ProductService interface {
 	CreateProduct(productReq dto.CreateProductRequestDTO) dto.CreateProductResponseDTO
+	ProductListByCategory(category string) []dto.ProductListResponseDTO
 }

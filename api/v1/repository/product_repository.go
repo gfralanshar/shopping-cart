@@ -4,4 +4,5 @@ import "shopping-chart/api/v1/model"
 
 type ProductRepository interface {
 	Create(product model.Product) model.Product
+	FindProductByCategory(category string) []model.Product
 }

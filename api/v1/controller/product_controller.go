@@ -7,5 +7,6 @@ import (
 )
 
 type ProductController interface {
-	CreateProductHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params )
+	CreateProductHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params)
+	ProductListHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params)
 }

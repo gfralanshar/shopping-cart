@@ -38,3 +38,15 @@ func (pc *ProductControllerImpl) CreateProductHandler(w http.ResponseWriter, r *
 	}
 	helper.WriteToResponseBody(w, webResponse)
 }
+
+func (pc *ProductControllerImpl) ProductListHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	params := r.URL.Query().Get("category")
+	productListResponse := pc.ProductService.ProductListByCategory(params)
+	webResponse := web.WebResponse{
+		Status: "ok",
+		Code:   http.StatusOK,
+		Data:   productListResponse,
+	}
+
+	helper.WriteToResponseBody(w, webResponse)
+}
