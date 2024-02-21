@@ -28,7 +28,8 @@ func (ps *ProductServiceImpl) CreateProduct(p dto.CreateProductRequestDTO) dto.C
 	product := model.Product{
 		Name:       p.Name,
 		Price:      p.Price,
-		CustomerId: 1,
+		CustomerId: p.CustomerId,
+		CategoryId: p.CategoryId,
 	}
 
 	p2 := ps.ProductRepository.Create(product)

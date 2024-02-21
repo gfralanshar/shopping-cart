@@ -4,6 +4,7 @@ type CreateProductRequestDTO struct {
 	Name       string `json:"name" validate:"required"`
 	Price      int64  `json:"price"`
 	CustomerId int
+	CategoryId int `json:"category_id" validate:"required"`
 }
 
 type CreateProductResponseDTO struct {

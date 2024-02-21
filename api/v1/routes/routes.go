@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"shopping-chart/api/v1/controller"
+	"shopping-chart/api/v1/exception"
 	"shopping-chart/api/v1/middleware"
 
 	"github.com/julienschmidt/httprouter"
@@ -28,5 +29,8 @@ func NewRoutes(customerController controller.CustomerController, productControll
 	router.POST("/api/v1/carts/products/:product_id", middleware.AuthMiddleware(cartsController.CreateCartHandler))
 	router.GET("/api/v1/carts", middleware.AuthMiddleware(cartsController.ShowCartsListHandler))
 	router.DELETE("/api/v1/carts/products/:product_id", middleware.AuthMiddleware(cartsController.DeleteProductFromCartHandler))
+
+	router.PanicHandler = exception.ErrorHandler
+
 	return router
 }

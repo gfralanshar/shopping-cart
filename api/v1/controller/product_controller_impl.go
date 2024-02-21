@@ -9,6 +9,7 @@ import (
 	"shopping-chart/api/v1/web/dto"
 
 	"github.com/julienschmidt/httprouter"
+	"github.com/sirupsen/logrus"
 )
 
 type ProductControllerImpl struct {
@@ -26,10 +27,12 @@ func NewProductController(prodService service.ProductService, custService servic
 func (pc *ProductControllerImpl) CreateProductHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	id, err := security.ExtractTokenId(r)
 	helper.PanicIfError(err)
+	logrus.Error("Customer controller Id ", id)
 
 	var productReq dto.CreateProductRequestDTO
 	helper.ReadFromRequestBody(r, &productReq)
 	productReq.CustomerId = id
+	logrus.Error("Customer Id", id)
 	productResponse := pc.ProductService.CreateProduct(productReq)
 	webResponse := web.WebResponse{
 		Status: "created",

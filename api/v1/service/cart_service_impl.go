@@ -1,6 +1,7 @@
 package service
 
 import (
+	"shopping-chart/api/v1/exception"
 	"shopping-chart/api/v1/model"
 	"shopping-chart/api/v1/repository"
 	"shopping-chart/api/v1/web/dto"
@@ -32,7 +33,17 @@ func (cs *CartServiceImpl) CreateCart(customerId int) dto.CreateCartResponseDTO 
 
 func (cs *CartServiceImpl) AddToCart(req dto.AddCartRequestDTO) dto.AddCartResponseDTO {
 
-	product := cs.productRepository.FindProductById(req.ProductId)
+	// check if product is present
+	product, err := cs.productRepository.FindProductById(req.ProductId)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
+
+	// check the product owner, make sure if current user not add thier product to cart
+	if product.CustomerId == req.CustomerId {
+		panic(exception.NewPermissionError("cannot add your own product to the cart"))
+	}
+
 	if product.Quantity >= req.Quantity {
 		cart := cs.cartRepository.AddProduct(model.CartItems{
 			CartId:    req.CartId,
@@ -41,7 +52,10 @@ func (cs *CartServiceImpl) AddToCart(req dto.AddCartRequestDTO) dto.AddCartRespo
 		})
 
 		// update product quantity
-		product := cs.productRepository.FindProductById(product.Id)
+		product, err := cs.productRepository.FindProductById(product.Id)
+		if err != nil {
+			panic(exception.NewNotFoundError(err.Error()))
+		}
 		updateQuantity := product.Quantity - req.Quantity
 		product.Quantity = updateQuantity
 		cs.productRepository.UpdateProduct(product)
@@ -71,7 +85,10 @@ func (cs *CartServiceImpl) FindCartById(req dto.FindCartByIdDTO) bool {
 func (cs *CartServiceImpl) DeleteProduct(req dto.DeleteProductRequestDTO) {
 	// update product quantity
 	cart := cs.cartRepository.FindCartItemById(req.ProductId, req.CustomerId)
-	product := cs.productRepository.FindProductById(req.ProductId)
+	product, err := cs.productRepository.FindProductById(req.ProductId)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 	cs.cartRepository.DeleteProductByProductId(req.ProductId, req.CustomerId)
 	product.Quantity = product.Quantity + cart.Quantity
 	cs.productRepository.UpdateProduct(product)
