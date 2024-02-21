@@ -4,6 +4,7 @@ import (
 	"shopping-chart/api/v1/helper"
 	"shopping-chart/api/v1/model"
 
+	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
 
@@ -50,6 +51,8 @@ func (pr *ProductRepositoryImpl) FindProductById(id int) model.Product {
 }
 
 func (pr *ProductRepositoryImpl) UpdateProduct(p model.Product) {
+	logrus.Error("Quantity:", p.Quantity)
+	logrus.Error("Product ID: ", p.Id)
 	updatedProduct := model.Product{
 		Id:       p.Id,
 		Quantity: p.Quantity,

@@ -30,3 +30,8 @@ type ListCartProductDTO struct {
 	ProductName string `json:"product_name"`
 	Quantity    int    `json:"quantity"`
 }
+
+type DeleteProductRequestDTO struct {
+	CustomerId int
+	ProductId int
+}

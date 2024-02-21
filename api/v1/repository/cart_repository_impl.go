@@ -43,7 +43,10 @@ func (cr *CartRepositoryImpl) AddProduct(c model.CartItems) model.CartItems {
 
 func (cr *CartRepositoryImpl) FindAllCarts(customerId int) []model.CartItems {
 	cartItems := []model.CartItems{}
-	err := cr.db.Model(&model.CartItems{}).Preload("Product").Joins("join products on products.id = cart_items.product_id").Where("customer_id= ?", customerId).Find(&cartItems).Error
+	err := cr.db.Model(&model.CartItems{}).
+		Preload("Product").Joins("join products on products.id = cart_items.product_id").
+		Where("customer_id= ?", customerId).
+		Find(&cartItems).Error
 	helper.PanicIfError(err)
 	return cartItems
 }
@@ -56,4 +59,23 @@ func (cr *CartRepositoryImpl) FindCartByCustomerId(customerId int) (model.Cart, 
 	}
 
 	return cart, nil
+}
+
+func (cr *CartRepositoryImpl) FindCartItemById(productId, customerId int) model.CartItems {
+	var cartItem model.CartItems
+	cr.db.Model(&model.CartItems{}).
+		Joins("join carts on carts.id = cart_items.cart_id").
+		Where("cart_items.product_id", productId).
+		Where("carts.customer_id", customerId).
+		First(&cartItem)
+	return cartItem
+}
+
+func (cr *CartRepositoryImpl) DeleteProductByProductId(productId, customerId int) {
+	cartItem := cr.db.Model(&model.CartItems{}).
+		Joins("JOIN carts ON carts.id = cart_items.cart_id").
+		Where("carts.customer_id = ?", customerId).
+		Where("cart_items.product_id = ?", productId).Error
+	err := cr.db.Model(&model.CartItems{}).Where("product_id", productId).Delete(&cartItem).Error
+	helper.PanicIfError(err)
 }

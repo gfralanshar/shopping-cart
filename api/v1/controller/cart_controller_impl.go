@@ -66,3 +66,19 @@ func (cc *CartControllerImpl) ShowCartsListHandler(w http.ResponseWriter, r *htt
 
 	helper.WriteToResponseBody(w, cartResponse)
 }
+
+func (cc *CartControllerImpl) DeleteProductFromCartHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	var req dto.DeleteProductRequestDTO
+	// get current user id
+	customerId, err := security.ExtractTokenId(r)
+	helper.PanicIfError(err)
+	req.CustomerId = customerId
+
+	// get productId param
+	productIdParam := p.ByName("product_id")
+	productId, err := strconv.Atoi(productIdParam)
+	helper.PanicIfError(err)
+	req.ProductId = productId
+
+	cc.CartService.DeleteProduct(req)
+}

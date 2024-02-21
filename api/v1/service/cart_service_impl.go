@@ -67,3 +67,12 @@ func (cs *CartServiceImpl) FindCartById(req dto.FindCartByIdDTO) bool {
 	}
 	return false
 }
+
+func (cs *CartServiceImpl) DeleteProduct(req dto.DeleteProductRequestDTO) {
+	// update product quantity
+	cart := cs.cartRepository.FindCartItemById(req.ProductId, req.CustomerId)
+	product := cs.productRepository.FindProductById(req.ProductId)
+	cs.cartRepository.DeleteProductByProductId(req.ProductId, req.CustomerId)
+	product.Quantity = product.Quantity + cart.Quantity
+	cs.productRepository.UpdateProduct(product)
+}

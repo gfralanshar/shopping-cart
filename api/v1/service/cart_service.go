@@ -7,4 +7,5 @@ type CartService interface {
 	AddToCart(req dto.AddCartRequestDTO) dto.AddCartResponseDTO
 	ShowCarts(customerId int) []dto.ListCartProductDTO
 	FindCartById(req dto.FindCartByIdDTO) bool
+	DeleteProduct(req dto.DeleteProductRequestDTO)
 }

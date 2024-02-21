@@ -9,4 +9,5 @@ import (
 type CartController interface {
 	CreateCartHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params)
 	ShowCartsListHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params)
+	DeleteProductFromCartHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params)
 }
