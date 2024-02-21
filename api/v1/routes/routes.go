@@ -14,7 +14,7 @@ func TestMiddleWare(w http.ResponseWriter, r *http.Request, p httprouter.Params)
 	fmt.Fprintf(w, "Hello World")
 }
 
-func NewRoutes(customerController controller.CustomerController, productController controller.ProductController, cartsController controller.CartController) *httprouter.Router {
+func NewRoutes(customerController controller.CustomerController, productController controller.ProductController, cartsController controller.CartController, paymentsController controller.PaymentController) *httprouter.Router {
 	router := httprouter.New()
 
 	router.POST("/api/v1/register", customerController.RegisterHandler)
@@ -29,6 +29,9 @@ func NewRoutes(customerController controller.CustomerController, productControll
 	router.POST("/api/v1/carts/products/:product_id", middleware.AuthMiddleware(cartsController.CreateCartHandler))
 	router.GET("/api/v1/carts", middleware.AuthMiddleware(cartsController.ShowCartsListHandler))
 	router.DELETE("/api/v1/carts/products/:product_id", middleware.AuthMiddleware(cartsController.DeleteProductFromCartHandler))
+
+	// payments
+	router.POST("/api/v1/payments", middleware.AuthMiddleware(paymentsController.CreatePaymentHandler))
 
 	router.PanicHandler = exception.ErrorHandler
 

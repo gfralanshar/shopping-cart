@@ -9,4 +9,5 @@ type CartRepository interface {
 	FindCartByCustomerId(customerId int) (model.Cart, error)
 	FindCartItemById(productId, customerId int) model.CartItems
 	DeleteProductByProductId(productId, customerId int)
+	DeleteCartItemAfterPayment(cartItemId int)
 }

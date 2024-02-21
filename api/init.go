@@ -54,7 +54,12 @@ func Run() {
 	cartService := service.NewCart(productRepository, cartRepository, validate)
 	cartController := controller.NewCart(cartService)
 
-	router := routes.NewRoutes(customerController, productController, cartController)
+	// payments
+	paymentRepository := repository.NewPayment(dbs)
+	paymentService := service.NewPayment(paymentRepository, productRepository, cartRepository, validate)
+	paymentController := controller.NewPayment(paymentService)
+
+	router := routes.NewRoutes(customerController, productController, cartController, paymentController)
 
 	server := http.Server{
 		Addr:    address,

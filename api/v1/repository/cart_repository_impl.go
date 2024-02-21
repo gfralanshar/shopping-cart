@@ -3,6 +3,7 @@ package repository
 import (
 	"shopping-chart/api/v1/helper"
 	"shopping-chart/api/v1/model"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -67,6 +68,7 @@ func (cr *CartRepositoryImpl) FindCartItemById(productId, customerId int) model.
 		Joins("join carts on carts.id = cart_items.cart_id").
 		Where("cart_items.product_id", productId).
 		Where("carts.customer_id", customerId).
+		Where("cart_items.deleted_at", "NULL").
 		First(&cartItem)
 	return cartItem
 }
@@ -78,4 +80,8 @@ func (cr *CartRepositoryImpl) DeleteProductByProductId(productId, customerId int
 		Where("cart_items.product_id = ?", productId).Error
 	err := cr.db.Model(&model.CartItems{}).Where("product_id", productId).Delete(&cartItem).Error
 	helper.PanicIfError(err)
+}
+
+func (cr *CartRepositoryImpl) DeleteCartItemAfterPayment(cartItemId int) {
+	cr.db.Model(&model.CartItems{}).Where("id = ?", cartItemId).Update("DeletedAt", time.Now())
 }
