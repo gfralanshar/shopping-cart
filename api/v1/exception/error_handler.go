@@ -21,7 +21,30 @@ func ErrorHandler(w http.ResponseWriter, r *http.Request, err any) {
 		return
 	}
 
+	if otherError(w, r, err) {
+		return
+	}
+
 	internalServerError(w, r, err)
+}
+
+func otherError(w http.ResponseWriter, r *http.Request, err any) bool {
+	exception, ok := err.(OtherErrorException)
+	if ok {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusUnprocessableEntity)
+
+		webResponse := web.WebResponse{
+			Status: "unprocessable entity",
+			Code:   http.StatusUnprocessableEntity,
+			Data:   exception.Error,
+		}
+
+		helper.WriteToResponseBody(w, webResponse)
+		return true
+	}
+
+	return false
 }
 
 func validationErrors(w http.ResponseWriter, r *http.Request, err any) bool {
@@ -70,8 +93,8 @@ func permissionError(w http.ResponseWriter, r *http.Request, err any) bool {
 
 		webResponse := web.WebResponse{
 			Status: "forbidden error",
-			Code: http.StatusForbidden,
-			Data: exception.Error,
+			Code:   http.StatusForbidden,
+			Data:   exception.Error,
 		}
 
 		helper.WriteToResponseBody(w, webResponse)

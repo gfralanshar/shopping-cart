@@ -64,9 +64,9 @@ func (cs *CartServiceImpl) AddToCart(req dto.AddCartRequestDTO) dto.AddCartRespo
 			ProductName: product.Name,
 			Quantity:    cart.Quantity,
 		}
+	} else {
+		panic(exception.NewOtherError("cant add product to cart"))
 	}
-
-	return dto.ToAddToCartResponse(model.CartItems{})
 }
 
 func (cs *CartServiceImpl) ShowCarts(customerId int) []dto.ListCartProductDTO {
