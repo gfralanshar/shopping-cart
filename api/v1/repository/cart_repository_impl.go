@@ -62,15 +62,20 @@ func (cr *CartRepositoryImpl) FindCartByCustomerId(customerId int) (model.Cart, 
 	return cart, nil
 }
 
-func (cr *CartRepositoryImpl) FindCartItemById(productId, customerId int) model.CartItems {
+func (cr *CartRepositoryImpl) FindCartItemById(productId, customerId int) (model.CartItems, error) {
 	var cartItem model.CartItems
-	cr.db.Model(&model.CartItems{}).
+	err := cr.db.Model(&model.CartItems{}).
 		Joins("join carts on carts.id = cart_items.cart_id").
 		Where("cart_items.product_id", productId).
 		Where("carts.customer_id", customerId).
-		Where("cart_items.deleted_at", "NULL").
-		First(&cartItem)
-	return cartItem
+		Where("cart_items.deleted_at is null").
+		First(&cartItem).Error
+
+	if err != nil {
+		return model.CartItems{}, err
+	}
+
+	return cartItem, nil
 }
 
 func (cr *CartRepositoryImpl) DeleteProductByProductId(productId, customerId int) {

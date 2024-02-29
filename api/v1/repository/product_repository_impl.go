@@ -50,7 +50,7 @@ func (pr *ProductRepositoryImpl) FindProductByCategory(category string) []model.
 
 func (pr *ProductRepositoryImpl) FindProductById(id int) (model.Product, error) {
 	var product model.Product
-	err := pr.db.Where("id = ?", id).First(&product).Error
+	err := pr.db.Preload("Category").Where("id = ?", id).First(&product).Error
 	if err != nil {
 		panic(exception.NewNotFoundError(err.Error()))
 	}

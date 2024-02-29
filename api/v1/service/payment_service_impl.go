@@ -25,10 +25,10 @@ func NewPayment(paymentRepo repository.PaymentRepository, productRepo repository
 	}
 }
 
-func (ps *PaymentServiceImpl) CreatePayment(req dto.CreatePaymentRequestDTO) dto.PaymentResponseDTO {
+func (ps *PaymentServiceImpl) CreatePayment(req dto.CreatePaymentRequestDTO) dto.PaymentResponsesDTO {
 	//select a products cheokout
 	var total_amount int64 = 0
-	var products []model.Product
+	var products []dto.DetailProduct
 	var carts []int
 
 	for _, productId := range req.ProductId {
@@ -37,13 +37,26 @@ func (ps *PaymentServiceImpl) CreatePayment(req dto.CreatePaymentRequestDTO) dto
 		if err != nil {
 			panic(exception.NewNotFoundError(err.Error()))
 		}
-		products = append(products, p)
 
 		// find cart items
-		c := ps.cartRepository.FindCartItemById(productId, req.CustomerId)
+		c, err := ps.cartRepository.FindCartItemById(productId, req.CustomerId)
+		if err != nil {
+			exception.NewNotFoundError("cart not found")
+		}
+
+		// calculate amount
 		amount := p.Price * int64(c.Quantity)
 		total_amount += amount
 		carts = append(carts, c.CartId)
+
+		// add details of product
+		detailProduct := dto.DetailProduct{
+			ProductName: p.Name,
+			Category:    p.Category.CategoryName,
+			Price:       p.Price,
+			Quantity:    c.Quantity,
+		}
+		products = append(products, detailProduct)
 
 		ps.cartRepository.DeleteCartItemAfterPayment(c.Id)
 		ps.paymentRepository.Create(model.Payment{
@@ -53,9 +66,9 @@ func (ps *PaymentServiceImpl) CreatePayment(req dto.CreatePaymentRequestDTO) dto
 		})
 	}
 
-	res := dto.PaymentResponseDTO{
-		Amount:   total_amount,
-		Products: products,
+	res := dto.PaymentResponsesDTO{
+		Amount:         total_amount,
+		ProductDetails: products,
 	}
 
 	return res

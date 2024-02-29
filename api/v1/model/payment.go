@@ -13,4 +13,5 @@ type Payment struct {
 	CreatedAt  time.Time    `gorm:"column:created_at;autoCreateTime;<-create"`
 	UpdatedAt  time.Time    `gorm:"column:updated_at;autoCreateTime;autoUpdateTime"`
 	DeletedAt  sql.NullTime `gorm:"column:deleted_at"`
+	Cart       Cart         `gorm:"foreignKey:cart_id;references:id"`
 }

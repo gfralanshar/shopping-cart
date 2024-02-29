@@ -23,7 +23,8 @@ func (pr *PaymentRepositoryImpl) Create(p model.Payment) model.Payment {
 		CustomerId: p.CustomerId,
 		Amount:     p.Amount,
 	}
-	err := pr.db.Create(&newPayment).Error
+	err := pr.db.Preload("Cart").Create(&newPayment).Error
+
 	helper.PanicIfError(err)
 
 	return newPayment

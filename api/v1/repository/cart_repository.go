@@ -7,7 +7,7 @@ type CartRepository interface {
 	AddProduct(cart model.CartItems) model.CartItems
 	FindAllCarts(customerId int) []model.CartItems
 	FindCartByCustomerId(customerId int) (model.Cart, error)
-	FindCartItemById(productId, customerId int) model.CartItems
+	FindCartItemById(productId, customerId int) (model.CartItems, error)
 	DeleteProductByProductId(productId, customerId int)
 	DeleteCartItemAfterPayment(cartItemId int)
 }

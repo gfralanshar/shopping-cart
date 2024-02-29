@@ -84,7 +84,11 @@ func (cs *CartServiceImpl) FindCartById(req dto.FindCartByIdDTO) bool {
 
 func (cs *CartServiceImpl) DeleteProduct(req dto.DeleteProductRequestDTO) {
 	// update product quantity
-	cart := cs.cartRepository.FindCartItemById(req.ProductId, req.CustomerId)
+	cart, err := cs.cartRepository.FindCartItemById(req.ProductId, req.CustomerId)
+	if err != nil {
+		panic(exception.NewNotFoundError("Cart not found"))
+	}
+
 	product, err := cs.productRepository.FindProductById(req.ProductId)
 	if err != nil {
 		panic(exception.NewNotFoundError(err.Error()))
